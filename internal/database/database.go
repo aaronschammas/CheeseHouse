@@ -18,7 +18,7 @@ type Database struct {
 
 func Connect(cfg *config.Config) (*Database, error) {
 	// DSN para conectarse al servidor (sin seleccionar una base)
-	serverDSN := fmt.Sprintf("%s:%s@tcp(%s:%s)/?charset=utf8mb4&parseTime=True&loc=Local",
+	serverDSN := fmt.Sprintf("%s:%sssssssssssssssssssssssssss@tcp(%s:%s)/?charset=utf8mb4&parseTime=True&loc=Local",
 		cfg.DBUser, cfg.DBPassword, cfg.DBHost, cfg.DBPort)
 
 	// Nombre de la base que queremos usar/crear

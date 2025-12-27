@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/gin-contrib/cors"
@@ -111,18 +112,9 @@ func setupRouter(
 	// Middleware de recovery
 	router.Use(gin.Recovery())
 
-	// Servir archivos estáticos
-	router.Static("/static", "./web/static")
-
-	// Cargar templates HTML
-	router.LoadHTMLGlob("web/templates/*")
-
 	// ===============================
 	// RUtAS PARA EL JUEGOVICH
 	// ===============================
-
-	// Página principal del juego
-	router.GET("/", gameHandler.ShowGame)
 
 	// API del juego
 	gameAPI := router.Group("/api/game")
@@ -193,14 +185,8 @@ func setupRouter(
 		})
 	})
 
-	// 404 Handler
-	router.NoRoute(func(c *gin.Context) {
-		c.JSON(404, gin.H{
-			"error":   "Endpoint no encontrado",
-			"message": "La ruta solicitada no existe",
-			"path":    c.Request.URL.Path,
-		})
-	})
+	// 404 Handler - servir archivos estáticos
+	router.NoRoute(gin.WrapH(http.FileServer(http.Dir("./Front/timing-game/"))))
 
 	return router
 }

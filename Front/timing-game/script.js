@@ -95,12 +95,26 @@ class TimingGame {
     }
   }
 
-  // Generar tiempo objetivo aleatorio
-  generateTargetTime() {
-    const min = GAME_CONFIG.minTargetTime
-    const max = GAME_CONFIG.maxTargetTime
-    this.targetTime = (Math.random() * (max - min) + min).toFixed(1)
-    this.elements.targetTime.textContent = this.targetTime
+  // Generar tiempo objetivo desde el backend
+  async generateTargetTime() {
+    try {
+      const response = await fetch('/api/game/target');
+      const data = await response.json();
+      if (data.success) {
+        this.targetTime = data.target_time;
+        this.elements.targetTime.textContent = this.targetTime;
+      } else {
+        console.error('Error obteniendo tiempo objetivo:', data);
+        // Fallback local
+        this.targetTime = 7.2;
+        this.elements.targetTime.textContent = this.targetTime;
+      }
+    } catch (error) {
+      console.error('Error de red:', error);
+      // Fallback local
+      this.targetTime = 7.2;
+      this.elements.targetTime.textContent = this.targetTime;
+    }
   }
 
   // Actualizar cronómetro con alta precisión
@@ -298,25 +312,37 @@ class TimingGame {
 
   // Simular envío de datos al backend
   async submitData(customerData, gameResult) {
-    // Simular delay de red
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-
-    console.log("Datos enviados al backend:", { customerData, gameResult })
-
-    // Aquí iría la llamada real al backend:
-    /*
-        const response = await fetch('/api/game-results', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ customerData, gameResult })
-        });
-        
-        if (!response.ok) {
-            throw new Error('Error en el servidor');
+    try {
+      const payload = {
+        cliente: {
+          nombre: customerData.nombre,
+          apellido: customerData.apellido,
+          telefono: customerData.telefono
+        },
+        resultado: {
+          gano: gameResult.gano,
+          tiempo_objetivo: parseFloat(this.targetTime),
+          tiempo_obtenido: gameResult.tiempoObtenido
         }
-        
-        return await response.json();
-        */
+      };
+
+      const response = await fetch('/api/game/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error en el servidor');
+      }
+
+      const result = await response.json();
+      console.log("Respuesta del backend:", result);
+      return result;
+    } catch (error) {
+      console.error('Error enviando datos:', error);
+      throw error;
+    }
   }
 
   // Mostrar mensaje de éxito
