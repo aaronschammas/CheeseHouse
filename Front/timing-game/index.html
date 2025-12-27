@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego del Timing</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="game-title">Juego del Timing</h1>
+        <div class="challenge-text">
+            <p>Detén el cronómetro en</p>
+            <span class="target-time" id="targetTime">7.2</span>
+            <p>segundos</p>
+        </div>
+
+        <div class="timer-display" id="timerDisplay">0.00</div>
+
+        <div class="game-controls">
+            <button class="game-button start-button" id="startButton">
+                <span class="button-icon"></span>
+                Iniciar
+            </button>
+            <button class="game-button stop-button hidden" id="stopButton">
+                <span class="button-icon"></span>
+                Detener
+            </button>
+        </div>
+
+        <div class="result-message hidden" id="resultMessage"></div>
+
+    </div>
+
+    <!-- Modal overlay for customer form -->
+    <div class="modal-overlay hidden" id="modalOverlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="form-title">¡Ingresa tus datos para recibir tu descuento!</h3>
+                <button class="modal-close" id="modalClose" aria-label="Cerrar">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="gameForm">
+                    <div class="form-group">
+                        <input type="text" id="nombre" name="nombre" placeholder="Nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="apellido" name="apellido" placeholder="Apellido" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" id="telefono" name="telefono" placeholder="Teléfono" required>
+                    </div>
+                    <button type="submit" class="game-button submit-button">
+                        <span class="button-icon"></span>
+                        Enviar Datos
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
