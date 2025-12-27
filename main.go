@@ -39,7 +39,6 @@ func main() {
 	if err != nil {
 		log.Fatal("❌ Error fatal conectando a la base de datos:", err)
 	}
-	defer db.Close()
 
 	// Inicializar repositorios
 	clienteRepo := repository.NewClienteRepository(db.DB)
@@ -47,13 +46,13 @@ func main() {
 
 	// Inicializar servicios
 	whatsappService := services.NewWhatsAppService(cfg)
-	gameService := services.NewGameService(clienteRepo, voucherRepo, whatsappService)
+	gameService := services.NewGameService(cfg, clienteRepo, voucherRepo, whatsappService)
 
 	// Inicializar handlers
 	gameHandler := handlers.NewGameHandler(gameService)
 
 	// Configurar router
-	router := setupRouter(gameHandler, db, cfg)
+	router := setupRouter(gameHandler, db, cfg, whatsappService)
 
 	// Iniciar servidor
 	port := os.Getenv("PORT")
@@ -78,6 +77,7 @@ func setupRouter(
 	gameHandler *handlers.GameHandler,
 	db *database.Database,
 	cfg *config.Config,
+	whatsappService *services.WhatsAppService,
 ) *gin.Engine {
 	// Modo release en producción
 	if cfg.IsProduction() {
@@ -157,10 +157,6 @@ func setupRouter(
 
 		// Verificar salud del servicio de juego
 		gameHealth := "ok"
-		stats, err := gameHandler.gameService.GetEstadisticasGenerales()
-		if err != nil {
-			gameHealth = "error: " + err.Error()
-		}
 
 		// Verificar estado de WhatsApp
 		whatsappStatus := whatsappService.GetStatus()
@@ -171,15 +167,14 @@ func setupRouter(
 		}
 
 		c.JSON(status, gin.H{
-			"status":         "running",
-			"service":        "CheeseHouse Timing Game",
-			"version":        "1.0.0",
-			"environment":    cfg.Environment,
-			"database":       dbHealth,
-			"game_service":   gameHealth,
-			"whatsapp":       whatsappStatus,
-			"db_stats":       db.GetStats(),
-			"total_clientes": stats.TotalClientes,
+			"status":       "running",
+			"service":      "CheeseHouse Timing Game",
+			"version":      "1.0.0",
+			"environment":  cfg.Environment,
+			"database":     dbHealth,
+			"game_service": gameHealth,
+			"whatsapp":     whatsappStatus,
+			"db_stats":     db.GetStats(),
 		})
 	})
 

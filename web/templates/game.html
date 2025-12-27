@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.titulo}}</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>{{.restaurante}} - Juego de Timing</h1>
+            <p>¡Demuestra tu precisión!</p>
+        </header>
+
+        <main>
+            <div class="game-area">
+                <div class="target-info">
+                    <h2>Tiempo Objetivo: <span id="target-time">--</span> segundos</h2>
+                    <p>Tolerancia: ±{{.tolerancia}} segundos</p>
+                </div>
+
+                <div class="timer-display">
+                    <div class="timer" id="timer">0.00</div>
+                    <button id="start-btn" class="btn btn-primary">Iniciar Juego</button>
+                </div>
+
+                <div class="result" id="result" style="display: none;">
+                    <h3 id="result-title"></h3>
+                    <p id="result-message"></p>
+                    <div id="voucher-info" style="display: none;">
+                        <p><strong>Código del Voucher:</strong> <span id="voucher-code"></span></p>
+                        <p><strong>Descuento:</strong> <span id="discount"></span>%</p>
+                        <p><strong>Válido hasta:</strong> <span id="expiry-date"></span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="instructions">
+                <h3>¿Cómo jugar?</h3>
+                <ol>
+                    <li>Haz clic en "Iniciar Juego"</li>
+                    <li>Espera a que aparezca el tiempo objetivo</li>
+                    <li>Presiona la barra espaciadora exactamente en ese momento</li>
+                    <li>¡Gana un descuento si aciertas!</li>
+                </ol>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 {{.restaurante}}. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
